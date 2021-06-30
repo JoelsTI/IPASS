@@ -77,11 +77,25 @@ public:
         }
         return ret;
     }
+	
+/// \brief
+/// refreshes the pin
+/// \details
+/// This function refreshes the pins.
+/// This updates the pins.
     void refresh() override{
         for(const auto &p : pinnen){
             p->refresh();
         }
     }
+	
+/// \brief
+/// flushes the direction
+/// \details
+/// All the data in the buffer gets transferred to the permanent memory.
+/// Once this function is called upon changes actually happen to the pins.
+/// This is because the flush function allows all the commands to be processed.
+/// It does so, because flush is used to synchronize the associated stream buffer with its controlled output sequence.
     void direction_flush() override{
         for(const auto &p : pinnen){
             p->direction_flush();
@@ -251,6 +265,7 @@ void setPixel(hwlib::xy xy) {
 /// All the data in the buffer gets transferred to the permanent memory.
 /// Once this function is called upon changes actually happen on the LED matrix.
 /// This is because the flush function allows all the commands to be processed.
+/// It does so, because flush is used to synchronize the associated stream buffer with its controlled output sequence.
 void flush(){
 	writeTransaction command(b);
 	command.writeData(3, 0x05);
