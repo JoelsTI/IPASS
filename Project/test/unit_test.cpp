@@ -114,9 +114,9 @@ public:
     }
 	
     void writeData(uint8_t byte_length, uint16_t a){
-        for (uint16_t bit = 1<<(byte_length-1); bit; bit >>= 1) {
+        for (uint16_t b = 1<<(byte_length-1); b; b >>= 1) {
             write.write(0);
-            data.write((a & bit) ? 1 : 0);
+            data.write((a & b) ? 1 : 0);
 			hwlib::cout << data.read()<< " "; 
             hwlib::wait_ms(1);
             write.write(1);
@@ -178,6 +178,7 @@ void initialize(){
 } 
 
 void brightness(uint8_t brightness){
+	hwlib::cout << "The byte of";
 		cmnd(HT1632C_CMD_PWMCONTROL | brightness);
 }
 
@@ -189,7 +190,7 @@ void clear(){
 	}
 	writeTransaction command(b);
 	hwlib::cout << "\n" << "The first 3 bits that have to be written are 1 0 1, these are to set it to the write id." << "\n";
-	command.writeData(HT1632C_ID_LEN, 0x05);
+	command.writeData(HT1632C_ID_LEN, HT1632C_ID_WRITE);
 	hwlib::cout << "\n" << "After that the memory addresses are written with just 0's" << "\n"; 
 	command.writeData(HT1632C_ADDRESS_LEN, 0x00);
 	hwlib::cout << "\n";
@@ -201,14 +202,14 @@ void clear(){
 }
 
 void setPixel(hwlib::xy xy) {
-		if((xy.x < 0) || (xy.x >= 16) || (xy.y < 0) || (xy.y >= 24)) return;
+		if((xy.x < 0) || (xy.x >= HT1632C_WIDTH) || (xy.y < 0) || (xy.y >= HT1632C_LENGTH)) return;
 		array[xy.y] |= 0x8000 >> xy.x;
 }
 
 void flush(){
 	writeTransaction command(b);
 	hwlib::cout << "The first 3 bits that have to be written are 1 0 1, these are to set it to the write id." << "\n";
-	command.writeData(HT1632C_ID_LEN, 0x05);
+	command.writeData(HT1632C_ID_LEN, HT1632C_ID_WRITE);
 	hwlib::cout << "\n" << "Afterwards the memory address should be written with a byte of 7 bits all containing 0's" << "\n";
 	command.writeData(HT1632C_ADDRESS_LEN, 0x00);
 	hwlib::cout << "\n" << "Afterwards the bits in the array are written to the HT1632C, if this array is empty, only 0's will be written." << "\n";
@@ -234,6 +235,8 @@ int main(void){
 	hwlib::wait_ms(2000);
     bus bus(write, data, cs);
 	HT1632C ht(bus);
+	
+	hwlib::cout << "================= BRIGHTNESS TEST =================" << "\n";
 	ht.brightness(0xf);
 	hwlib::cout << "================= INITIALIZE TEST =================" << "\n";
 	ht.initialize();

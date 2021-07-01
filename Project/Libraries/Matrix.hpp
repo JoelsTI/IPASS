@@ -319,6 +319,7 @@ void initialize(){
 void brightness(uint8_t brightness){
 		cmnd(HT1632C_CMD_PWMCONTROL | brightness);
 }
+
 /// \brief
 /// Clears the LED Matrix
 /// \details
