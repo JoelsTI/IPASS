@@ -178,6 +178,7 @@ public:
 /// The data is used to send over data.
 /// The cs pin is the chip select pin.
 /// Pointers are made for the write, data and cs pins.
+/// The SPI bus primary function is to create a synchronized serial datalink between two mediums.
 class bus{
 protected:
    friend class writeTransaction;
@@ -210,6 +211,7 @@ public:
 /// \details
 /// This class takes the SPI bus and creates a transaction from it.
 /// The CS pin starts off high to mark the beginning and ends low to mark the ending.
+/// This class also sets all the pins to output pins.
 class writeTransaction{
 protected:
     bus &b;
@@ -238,7 +240,7 @@ public:
 /// The write is first written low, in preparation to send data, after the data is written the write is turned back to high to actually send over said data.
 /// the data is written in the following way:
 /// - a and the bit are being used by the AND operator.
-/// the conditional operator checks if a & bit match, if they do a 1 is written, if they don't a 0 is written.
+/// - the conditional operator checks if a & bit match, if they do a 1 is written, if they don't a 0 is written.
     void writeData(uint8_t byte_length, uint16_t a){
         for (uint16_t b = 1<<(byte_length-1); b; b >>= 1) {
             write.write(0);
@@ -247,7 +249,8 @@ public:
 //            hwlib::cout << "Data: " << data.read()<< "\n"; uncomment for debugging
             write.write(1);
         }
-    }	
+    }
+	
 /// \brief
 /// Destructor
 /// \details
@@ -346,7 +349,9 @@ void clear(){
 /// Sets a Pixel on the LED Matrix
 /// \details
 /// This function sets a pixel on the LED matrix using hwlib::xy.
+/// It checks if the x is smaller than 0 or bigger than 15 and it checks if the y is smaller than 0 or bigger than 23.
 /// It creates an x location from 0 to 15 and an y location from 0 to 23.
+/// A Bitwise OR assignment operator along with a right shift operator is used to modify the array.
 void setPixel(hwlib::xy xy) {
 		if((xy.x < 0) || (xy.x >= HT1632C_WIDTH) || (xy.y < 0) || (xy.y >= HT1632C_LENGTH)) return;
 		array[xy.y] |= 0x8000 >> xy.x;
