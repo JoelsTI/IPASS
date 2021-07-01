@@ -160,8 +160,13 @@ void initialize(){
 } 
 
 void clear(){
+	hwlib::cout << "First the array is cleared, since it's possible there's still something in it, we dump the memory of it: ";
+	for(int i = 0; i<24; i++){
+	array[i] = 0x00;
+	hwlib::cout << array[i] << ", ";
+	}
 	writeTransaction command(b);
-	hwlib::cout << "The first 3 bits that have to be written are 1 0 1, these are to set it to the write id." << "\n";
+	hwlib::cout << "\n" << "The first 3 bits that have to be written are 1 0 1, these are to set it to the write id." << "\n";
 	command.writeData(HT1632C_ID_LEN, 0x05);
 	hwlib::cout << "\n" << "After that the memory addresses are written with just 0's" << "\n"; 
 	command.writeData(HT1632C_ADDRESS_LEN, 0x00);
@@ -214,7 +219,7 @@ int main(void){
 	ht.clear();
 	hwlib::cout << "================= FLUSH TEST: EMPTY ARRAY =================" << "\n";
 	ht.flush();
-	hwlib::cout << "================= FLUSH TEST: FULL ARRAY =================" << "\n";
+	hwlib::cout << "================= FLUSH TEST & SETPIXEL TEST: FULL ARRAY =================" << "\n";
 	for( int x = 0; x < 16; x++){
 		for( int y = 0; y < 24; y++){
 			hwlib::xy xy1(x, y);
