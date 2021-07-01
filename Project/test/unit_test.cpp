@@ -178,8 +178,13 @@ void initialize(){
 } 
 
 void brightness(uint8_t brightness){
-	hwlib::cout << "The byte of";
-		cmnd(HT1632C_CMD_PWMCONTROL | brightness);
+	hwlib::cout << "First off we expect a command mode ID: 100" << "\n";
+	hwlib::cout << "After that comes the PWMCONTROL and brightness" << "\n";
+	hwlib::cout << "PWMCONTROL = 1010-0000 and brightness in this case is 0xf, which in binary is 0000-1111" << "\n";
+	hwlib::cout << "Since they get OR'd to each other, it will become 1010-1111, making the complete byte:" << "\n" << "1 0 0 1 0 1 0 1 1 1 1 X check" << "\n";
+	cmnd(HT1632C_CMD_PWMCONTROL | brightness);
+	hwlib::cout << "passed" << "\n";
+	hwlib::cout << "==================================================" << "\n" << "\n";
 }
 
 void clear(){
