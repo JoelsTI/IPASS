@@ -1,54 +1,72 @@
 #include "hwlib.hpp"
-#include "command_list.hpp"
+
+#define HT1632C_ID_READ 0b110 
+#define HT1632C_ID_WRITE 0b101 
+#define HT1632C_ID_COMMAND 0b100 
+#define HT1632C_ID_LEN 3 
+#define HT1632C_CMD_SYSDIS 0x00 
+#define HT1632C_CMD_SYSEN 0x01 
+#define HT1632C_CMD_LEDOFF 0x02 
+#define HT1632C_CMD_LEDON 0x03 
+#define HT1632C_CMD_BLINKOFF 0x08
+#define HT1632C_CMD_BLINKON 0x09 
+#define HT1632C_CMD_INT_RC 0x18 
+#define HT1632C_CMD_COMS00 0x20 
+#define HT1632C_CMD_COMS01 0x24
+#define HT1632C_CMD_COMS10 0x28
+#define HT1632C_CMD_COMS11 0x2C 
+#define HT1632C_CMD_PWMCONTROL 0xA0
+#define HT1632C_CMD_LEN 8 
+#define HT1632C_ADDRESS_LEN 7 
+#define HT1632C_DATA_LEN 4 
+#define HT1632C_LENGTH 24
+#define HT1632C_WIDTH 16 
 
 class pin_setup : public hwlib::pin_in_out{
 protected:
-    std::array< hwlib::pin_in_out *, 4> pinnen;
+    std::array< hwlib::pin_in_out *, 3> pins;
 public:
-    pin_setup(hwlib::pin_in_out & data,
-          hwlib::pin_in_out & write = hwlib::pin_in_out_dummy,
-          hwlib::pin_in_out & read = hwlib::pin_in_out_dummy,
-          hwlib::pin_in_out & cs = hwlib::pin_in_out_dummy):
-            pinnen{ &data, &write, &read, & cs}{}
-			
+    pin_setup(hwlib::pin_in_out & data, hwlib::pin_in_out & write = hwlib::pin_in_out_dummy, hwlib::pin_in_out & cs = hwlib::pin_in_out_dummy):
+	pins{ &data, &write, &cs}{}
+	
     void direction_set_output() override{
-        for(const auto &p : pinnen){
+        for(const auto &p : pins){
             p->direction_set_output();
         }
     }
 	
     void write(bool v) override{
-        for(const auto &p : pinnen){
+        for(const auto &p : pins){
             p->write(v);
         }
     }
 	
     void flush() override{
-        for(const auto &p : pinnen){
+        for(const auto &p : pins){
             p->flush();
         }
     }
 	
     void direction_set_input() override{
-        for(const auto &p : pinnen){
+        for(const auto &p : pins){
             p->direction_set_input();
         }
     }
 	
     bool read() override{
         bool ret = false;
-        for(const auto &p : pinnen){
+        for(const auto &p : pins){
             ret |= p->read();
         }
         return ret;
     }
     void refresh() override{
-        for(const auto &p : pinnen){
+        for(const auto &p : pins){
             p->refresh();
         }
     }
     void direction_flush() override{
-        for(const auto &p : pinnen){
+        for(const auto &p : pins){
             p->direction_flush();
         }
     }
@@ -159,6 +177,10 @@ void initialize(){
 	hwlib::cout << "==================================================" << "\n" << "\n";
 } 
 
+void brightness(uint8_t brightness){
+		cmnd(HT1632C_CMD_PWMCONTROL | brightness);
+}
+
 void clear(){
 	hwlib::cout << "First the array is cleared, since it's possible there's still something in it, we dump the memory of it: ";
 	for(int i = 0; i<24; i++){
@@ -205,14 +227,14 @@ int main(void){
     namespace target = hwlib::target;
     auto data = target::pin_in_out(target::pins::d8);
     auto write = target::pin_in_out(target::pins::d9);
-    auto read = target::pin_in_out(target::pins::d10);
     auto cs = target::pin_in_out(target::pins::d11);
-    auto setup = pin_setup(data, write, read, cs);
+    auto setup = pin_setup(data, write, cs);
     setup.direction_set_output();
     setup.direction_flush();
 	hwlib::wait_ms(2000);
     bus bus(write, data, cs);
 	HT1632C ht(bus);
+	ht.brightness(0xf);
 	hwlib::cout << "================= INITIALIZE TEST =================" << "\n";
 	ht.initialize();
 	hwlib::cout << "================= CLEARS TEST =================" << "\n";

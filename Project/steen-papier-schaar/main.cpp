@@ -1,5 +1,4 @@
 #include "hwlib.hpp"
-#include "command_list.hpp"
 #include "Matrix.hpp"
 
 int main(void){
@@ -16,7 +15,7 @@ int main(void){
 	auto sw_steen_p2 = target::pin_in_out(hwlib::target::pins::d4);
 	auto sw_papier_p2 = target::pin_in_out(hwlib::target::pins::d3);
 	auto sw_schaar_p2 = target::pin_in_out(hwlib::target::pins::d2);
-    auto setup = pin_setup(data, read, write, cs);
+    auto setup = pin_setup(data, write, cs);
 	int steen_p1 = 0;
 	int papier_p1 = 0;
 	int schaar_p1 = 0;
@@ -33,6 +32,7 @@ int main(void){
 	ht.initialize();
 	hwlib::wait_ms(1);
 	ht.clear();
+	ht.brightness(0xf);
 	sw_steen_p1.direction_set_input();
 	sw_papier_p1.direction_set_input();
 	sw_schaar_p1.direction_set_input();
