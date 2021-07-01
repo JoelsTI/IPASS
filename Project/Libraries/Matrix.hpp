@@ -241,6 +241,9 @@ void initialize(){
 /// Second off 0 is being written to all 7 of the memory adresses.
 /// Lastly it writes 0 to all the ROWS and COMS.
 void clear(){
+	for(int i = 0; i<24; i++){
+	array[i] = 0x00;
+	}
 	writeTransaction command(b);
 	command.writeData(3, 0x05);
 	command.writeData(7, 0x00);

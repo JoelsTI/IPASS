@@ -16,7 +16,7 @@ int main(void){
 	auto sw_steen_p2 = target::pin_in_out(hwlib::target::pins::d4);
 	auto sw_papier_p2 = target::pin_in_out(hwlib::target::pins::d3);
 	auto sw_schaar_p2 = target::pin_in_out(hwlib::target::pins::d2);
-    auto setup = pin_setup(data, write, read, cs);
+    auto setup = pin_setup(data, write, cs);
 	int steen_p1 = 0;
 	int papier_p1 = 0;
 	int schaar_p1 = 0;
@@ -142,6 +142,10 @@ int main(void){
 		hwlib::xy xy51(x, 8);
 		ht.setPixel(xy51);
 	}
+	ht.flush();
+	hwlib::wait_ms(2000);
+	p1_keuze = 0; p2_keuze = 0; steen_p1 = 0; steen_p2 = 0; papier_p1 = 0; papier_p2 = 0; schaar_p1 = 0; schaar_p2 = 0;
+	ht.clear();
 	}
 	else{
 		// 2
@@ -152,10 +156,11 @@ int main(void){
 		hwlib::xy xy59(10, y);
 		ht.setPixel(xy59);
 	}
-		
-	}
 	ht.flush();
-	hwlib::wait_ms(100);
+	hwlib::wait_ms(2000);
+	p1_keuze = 0; p2_keuze = 0; steen_p1 = 0; steen_p2 = 0; papier_p1 = 0; papier_p2 = 0; schaar_p1 = 0; schaar_p2 = 0;
+	ht.clear();
+	}
 }
 else if( ( steen_p1 == 1 && steen_p2 == 1) || ( papier_p1 == 1 && papier_p2 == 1) || (schaar_p1 == 1 && schaar_p2 == 1) ){
 	// D
@@ -168,7 +173,7 @@ else if( ( steen_p1 == 1 && steen_p2 == 1) || ( papier_p1 == 1 && papier_p2 == 1
 	ht.setPixel(xy61); ht.setPixel(xy62); ht.setPixel(xy63); ht.setPixel(xy64); ht.setPixel(xy65); ht.setPixel(xy66); ht.setPixel(xy67); ht.setPixel(xy68); 
 	ht.setPixel(xy69); ht.setPixel(xy70); 
 	// R
-	for(int x = 4; x < 11; x++){
+	for(int x = 4; x < 10; x++){
 		hwlib::xy xy71(x, 7);
 		ht.setPixel(xy71);
 	}
@@ -187,10 +192,14 @@ else if( ( steen_p1 == 1 && steen_p2 == 1) || ( papier_p1 == 1 && papier_p2 == 1
 		hwlib::xy xy85(x, 18); hwlib::xy xy86(x, 22);
 		ht.setPixel(xy85); ht.setPixel(xy86);
 	}
-	hwlib::xy xy87(4, 19); hwlib::xy xy88(4, 21); hwlib::xy xy89(5, 20); hwlib::xy xy90(6, 20);
-	ht.setPixel(xy87); ht.setPixel(xy88); ht.setPixel(xy89); ht.setPixel(xy90);
+	hwlib::xy xy87(4, 19); hwlib::xy xy88(4, 21); hwlib::xy xy89(5, 20); hwlib::xy xy90(6, 20); hwlib::xy xy91(7, 20);
+	ht.setPixel(xy87); ht.setPixel(xy88); ht.setPixel(xy89); ht.setPixel(xy90); ht.setPixel(xy91);
 	ht.flush();
+	hwlib::wait_ms(20000);
+	p1_keuze = 0; p2_keuze = 0; steen_p1 = 0; steen_p2 = 0; papier_p1 = 0; papier_p2 = 0; schaar_p1 = 0; schaar_p2 = 0;
+	ht.clear();
 }
+
 else{
 	ht.clear();
 }
