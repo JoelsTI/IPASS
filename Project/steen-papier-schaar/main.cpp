@@ -16,7 +16,7 @@ int main(void){
 	auto sw_steen_p2 = target::pin_in_out(hwlib::target::pins::d4);
 	auto sw_papier_p2 = target::pin_in_out(hwlib::target::pins::d3);
 	auto sw_schaar_p2 = target::pin_in_out(hwlib::target::pins::d2);
-    auto setup = pin_setup(data, write, cs);
+    auto setup = pin_setup(data, read, write, cs);
 	int steen_p1 = 0;
 	int papier_p1 = 0;
 	int schaar_p1 = 0;
@@ -195,7 +195,7 @@ else if( ( steen_p1 == 1 && steen_p2 == 1) || ( papier_p1 == 1 && papier_p2 == 1
 	hwlib::xy xy87(4, 19); hwlib::xy xy88(4, 21); hwlib::xy xy89(5, 20); hwlib::xy xy90(6, 20); hwlib::xy xy91(7, 20);
 	ht.setPixel(xy87); ht.setPixel(xy88); ht.setPixel(xy89); ht.setPixel(xy90); ht.setPixel(xy91);
 	ht.flush();
-	hwlib::wait_ms(20000);
+	hwlib::wait_ms(2000);
 	p1_keuze = 0; p2_keuze = 0; steen_p1 = 0; steen_p2 = 0; papier_p1 = 0; papier_p2 = 0; schaar_p1 = 0; schaar_p2 = 0;
 	ht.clear();
 }
