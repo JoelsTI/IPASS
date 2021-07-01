@@ -71,22 +71,22 @@
 #define HT1632C_DATA_LEN 4 
 /// \brief
 /// length of the HT1632C
-#define HT1632C_LEN 24
+#define HT1632C_LENGTH 24
 /// \brief
 /// width of the HT1632C 
 #define HT1632C_WIDTH 16 
 
 /// \brief
-/// Setup of Pins
+/// Setup for pins
 /// \details
 /// This is a class made to setup the pins for ease of use.
 /// An array is made so that the pins can all be setup at once.
 class pin_setup : public hwlib::pin_in_out{
 protected:
-    std::array< hwlib::pin_in_out *, 3> pinnen;
+    std::array< hwlib::pin_in_out *, 3> pins;
 public:
     pin_setup(hwlib::pin_in_out & data, hwlib::pin_in_out & write = hwlib::pin_in_out_dummy, hwlib::pin_in_out & cs = hwlib::pin_in_out_dummy):
-	pinnen{ &data, &write, &cs}{}
+	pins{ &data, &write, &cs}{}
 
 /// \brief
 /// sets a pin to output mode
@@ -94,7 +94,7 @@ public:
 /// This function makes it so that a pin can be used as an output.
 /// An example of this is a LED that has to emit light.				
     void direction_set_output() override{
-        for(const auto &p : pinnen){
+        for(const auto &p : pins){
             p->direction_set_output();
         }
     }
@@ -105,7 +105,7 @@ public:
 /// This function makes it so that a pin can be used as an input.
 /// An example of this is a button that can be used to turn on a LED.   	
 	void direction_set_input() override{
-        for(const auto &p : pinnen){
+        for(const auto &p : pins){
             p->direction_set_input();
         }
     }
@@ -116,7 +116,7 @@ public:
 /// This function allows it so that data can be written towards a pin.
 /// An example of this is making a LED turn on or off.	
 	void write(bool v) override{
-        for(const auto &p : pinnen){
+        for(const auto &p : pins){
             p->write(v);
         }
     }
@@ -127,7 +127,7 @@ public:
 /// This function flushes the pin.
 /// This clears the internal buffer.
     void flush() override{
-        for(const auto &p : pinnen){
+        for(const auto &p : pins){
             p->flush();
         }
     }
@@ -140,7 +140,7 @@ public:
 /// If it is able to read the pin, it returns true	
     bool read() override{
         bool ret = false;
-        for(const auto &p : pinnen){
+        for(const auto &p : pins){
             ret |= p->read();
         }
         return ret;
@@ -152,7 +152,7 @@ public:
 /// This function refreshes the pins.
 /// This updates the pins.
     void refresh() override{
-        for(const auto &p : pinnen){
+        for(const auto &p : pins){
             p->refresh();
         }
     }
@@ -165,7 +165,7 @@ public:
 /// This is because the flush function allows all the commands to be processed.
 /// It does so, because flush is used to synchronize the associated stream buffer with its controlled output sequence.
     void direction_flush() override{
-        for(const auto &p : pinnen){
+        for(const auto &p : pins){
             p->direction_flush();
         }
     }
@@ -335,7 +335,7 @@ void clear(){
 /// This function sets a pixel on the LED matrix using hwlib::xy.
 /// It creates an x location from 0 to 15 and an y location from 0 to 23.
 void setPixel(hwlib::xy xy) {
-		if((xy.x < 0) || (xy.x >= 16) || (xy.y < 0) || (xy.y >= 24)) return;
+		if((xy.x < 0) || (xy.x >= HT1632C_WIDTH) || (xy.y < 0) || (xy.y >= HT1632C_LENGTH)) return;
 		array[xy.y] |= 0x8000 >> xy.x;
 }
 
