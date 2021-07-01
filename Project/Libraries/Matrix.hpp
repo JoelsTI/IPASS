@@ -264,6 +264,8 @@ public:
 /// This is the self-written library for my IPASS project. 
 /// The LED-matrix I'm using has a length of 16 pixels and a width of 24 pixels.
 /// It is controlled by the HT1632 chip. This chip uses a SPI bus.
+/// It has an array of 24 bytes, this array works as a buffer to control the pixels on the led matrix.
+/// It uses friend class bus and writeTransaction, this way these 2 functions can be implemented together.
 class HT1632C : public writeTransaction{
 protected:
 	bus &b;
