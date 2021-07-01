@@ -54,6 +54,9 @@
 /// \brief
 /// COMMAND = 0010-abXX, P-MOS open drain output and 16 COM OPTION
 #define HT1632C_CMD_COMS11 0x2C 
+/// \brief
+/// COMMAND = 101X-0000-X, allows control of PWM duties
+#define HT1632C_CMD_PWMCONTROL 0xA0
 
 
 // LENGTHS //
@@ -298,6 +301,15 @@ void initialize(){
 	cmnd(HT1632C_CMD_COMS01);	
 } 
 
+/// \brief
+/// change brightness of the LED matrix
+/// \details
+/// The following function uses the pwmcontrol command.
+/// The byte of this command is 1010-0000, this allows it to be used alongside an OR operator to change the brightness
+/// The max brightness is 0xf, which is 0000-1111. If u OR this with the byte command, it becomes 1010-1111, changing the brightness.
+void brightness(uint8_t brightness){
+		cmnd(HT1632C_CMD_PWMCONTROL | brightness);
+}
 /// \brief
 /// Clears the LED Matrix
 /// \details
